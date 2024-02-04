@@ -19,4 +19,6 @@ public class CheckRecord extends BaseModel{
     private String checkUserId;// 巡检人id
 
     private Date checkTime;// 巡检时间
+
+    private String validCheckItems;// 合格项
 }

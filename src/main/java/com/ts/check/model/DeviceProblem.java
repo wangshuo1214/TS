@@ -16,7 +16,7 @@ public class DeviceProblem extends BaseModel{
 
     private String deviceId;// 设备名称
 
-    private String problemId;// 问题id
+    private String validCheckItems;// 无效检查项id
 
     private Date time;// 巡检时间，与巡检记录表的巡检时间保持一致
 

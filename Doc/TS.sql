@@ -21,15 +21,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for CHECK_RECORD
 -- ----------------------------
 DROP TABLE IF EXISTS `CHECK_RECORD`;
-CREATE TABLE `CHECK_RECORD` (
-  `uuid` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `device_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备id',
-  `check_user_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '巡检人员id',
-  `check_time` datetime NOT NULL COMMENT '巡检时间',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
-  PRIMARY KEY (`uuid`)
+CREATE TABLE `check_record` (
+    `uuid` varchar(36) COLLATE utf8mb4_general_ci NOT NULL,
+    `device_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备id',
+    `check_user_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '巡检人员id',
+    `check_time` datetime NOT NULL COMMENT '巡检时间',
+    `valid_check_items` text COMMENT '合格项id集合',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `update_time` datetime NOT NULL COMMENT '修改时间',
+    `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+    PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
@@ -46,11 +47,10 @@ CREATE TABLE `DEVICE` (
   `uuid` varchar(36) COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备名称',
   `type` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备类型',
-  `code` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '二维码',
   `remark` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+  `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -67,7 +67,7 @@ DROP TABLE IF EXISTS `DEVICE_PROBLEM`;
 CREATE TABLE `DEVICE_PROBLEM` (
   `uuid` varchar(36) COLLATE utf8mb4_general_ci NOT NULL,
   `device_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备id',
-  `problem_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '问题id',
+  `invalid_check_item_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '检查项id',
   `time` datetime NOT NULL COMMENT '巡检时间',
   `description` varchar(500) COLLATE utf8mb4_general_ci NOT NULL COMMENT '问题描述',
   `close_status` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '关闭状态',
@@ -76,7 +76,7 @@ CREATE TABLE `DEVICE_PROBLEM` (
   `close_description` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '关闭描述',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+  `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -98,7 +98,7 @@ CREATE TABLE `DICT_DATA` (
   `remark` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+  `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -119,7 +119,7 @@ CREATE TABLE `DICT_TYPE` (
   `remark` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+  `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -148,17 +148,17 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for PROBLEM_LIST
+-- Table structure for CHECK_ITEM
 -- ----------------------------
-DROP TABLE IF EXISTS `PROBLEM_LIST`;
-CREATE TABLE `PROBLEM_LIST` (
+DROP TABLE IF EXISTS `CHECK_ITEM`;
+CREATE TABLE `CHECK_ITEM` (
   `uuiid` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `device_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备类型',
   `check_type` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '巡检类型',
   `content` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '检查内容',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+  `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
   PRIMARY KEY (`uuiid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -180,7 +180,7 @@ CREATE TABLE `USER` (
   `vx_id` varchar(36) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
-  `is_deleted` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+  `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

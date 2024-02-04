@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("PROBLEM_LIST")
-public class ProblemList extends BaseModel{
+@TableName("CHECK_ITEM")
+public class CheckItem extends BaseModel{
 
     @TableId(type = IdType.ASSIGN_UUID)
     private String uuid;

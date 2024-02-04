@@ -16,7 +16,5 @@ public class Device extends BaseModel{
 
     private String type;// 设备类型
 
-    private String code;// 对应二维码
-
     private String remark;// 备注
 }

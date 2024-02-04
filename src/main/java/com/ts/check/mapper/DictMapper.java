@@ -3,6 +3,7 @@ package com.ts.check.mapper;
 import com.ts.check.model.DictData;
 import com.ts.check.model.DictType;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,9 +20,13 @@ public interface DictMapper {
 
     DictType getDictType(String id);
 
-    int deleteDictType(List<String> ids);
+    int deleteDictType(@Param("ids")List<String> ids);
+
+    int deleteDictDataByType(String dictTypeId);
 
     int addDictData(DictData dictData);
+
+    List<DictData> checkDictDataUnique(DictData dictData);
 
     int updateDictData(DictData dictData);
 
@@ -29,10 +34,10 @@ public interface DictMapper {
 
     List<DictData> queryDictData(DictData dictData);
 
-    int deleteDictData(List<String> ids);
+    int deleteDictData(@Param("ids")List<String> ids);
 
     List<DictData> getDictDataByType(String dictType);
 
-    DictData getSoleDict(String dictType, String dictCode);
+    DictData getSoleDict(@Param("dictType")String dictType, @Param("dictCode")String dictCode);
 
 }

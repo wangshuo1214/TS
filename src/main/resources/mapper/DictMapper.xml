@@ -15,12 +15,12 @@
     </sql>
 
     <sql id="deleteFlagHql">
-        and is_deleted = ${@com.ts.check.entity.BaseConstant@FALSE}
+        and is_delete = ${@com.ts.check.entity.BaseConstant@FALSE}
     </sql>
 
     <insert id="addDictType">
-        insert into bm_dict_type (
-        <if test="uuid != null and uuid != ''">id,</if>
+        insert into dict_type (
+        <if test="uuid != null and uuid != ''">uuid,</if>
         <if test="dictType != null and dictType != ''">dict_type,</if>
         <if test="dictName != null and dictName != ''">dict_name,</if>
         <if test="remark != null and remark != ''">remark,</if>
@@ -28,7 +28,7 @@
         <if test="updateTime != null">update_time,</if>
         <if test="isDelete != null and isDelete != ''">is_delete</if>
         ) values (
-        <if test="id != null and id != ''">#{id},</if>
+        <if test="uuid != null and uuid != ''">#{uuid},</if>
         <if test="dictType != null and dictType != ''">#{dictType},</if>
         <if test="dictName != null and dictName != ''">#{dictName},</if>
         <if test="remark != null and remark != ''">#{remark},</if>
@@ -73,7 +73,7 @@
             <if test="dictName != null and dictName != ''">dict_name = #{dictName},</if>
             <if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
-            <if test="updateTime != null">update_date = #{updateTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
         </set>
         where uuid = #{uuid}
     </update>
@@ -86,17 +86,29 @@
     </select>
 
     <update id="deleteDictType" parameterType="String">
-        update bm_dict_type set deleted = ${@com.ts.check.entity.BaseConstant@TRUE} , update_time = sysdate()
+        update dict_type set is_delete = ${@com.ts.check.entity.BaseConstant@TRUE} , update_time = sysdate()
         where uuid in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
 
+    <update id="deleteDictDataByType" parameterType="String">
+        update dict_data set is_delete = ${@com.ts.check.entity.BaseConstant@TRUE} , update_time = sysdate()
+        where dict_type_id = #{dictTypeId}
+    </update>
+
+    <select id="checkDictDataUnique" parameterType="DictData" resultType="DictData">
+        <include refid="selectDictDataHql"/>
+        <where>
+            dict_code = #{dictCode} and dict_type_id = #{dictTypeId}
+        </where>
+        <include refid="deleteFlagHql"/>
+    </select>
 
     <insert id="addDictData">
         insert into dict_data (
-        <if test="id != null and id != ''">id,</if>
+        <if test="uuid != null and uuid != ''">uuid,</if>
         <if test="dictCode != null and dictCode != ''">dict_code,</if>
         <if test="dictName != null and dictName != ''">dict_name,</if>
         <if test="dictTypeId != null and dictTypeId != ''">dict_type_id,</if>
@@ -105,7 +117,7 @@
         <if test="updateTime != null">update_time,</if>
         <if test="isDelete != null and isDelete != ''">is_delete</if>
         ) values (
-        <if test="id != null and id != ''">#{id},</if>
+        <if test="uuid != null and uuid != ''">#{uuid},</if>
         <if test="dictCode != null and dictCode != ''">#{dictCode},</if>
         <if test="dictName != null and dictName != ''">#{dictName},</if>
         <if test="dictTypeId != null and dictTypeId != ''">#{dictTypeId},</if>
@@ -148,7 +160,7 @@
     </select>
 
     <update id="deleteDictData" parameterType="String">
-        update bm_dict_data set deleted = ${@com.ts.check.entity.BaseConstant@TRUE} , update_date = sysdate()
+        update dict_data set is_delete = ${@com.ts.check.entity.BaseConstant@TRUE} , update_time = sysdate()
         where uuid in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -159,7 +171,7 @@
         <include refid="selectDictDataHql"/>
         <where>
             dict_type_id = (
-            select id from dict_type where dict_type = #{dictType}
+            select uuid from dict_type where dict_type = #{dictType}
             <include refid="deleteFlagHql"/>
             )
         </where>
@@ -171,11 +183,11 @@
         <include refid="selectDictDataHql"/>
         <where>
             dict_type_id = (
-            select id from dict_type where dict_type = #{dictType}
+            select uuid from dict_type where dict_type = #{dictType}
             <include refid="deleteFlagHql"/>
             ) and dict_code = #{dictCode}
         </where>
         <include refid="deleteFlagHql"/>
-        order by order_num asc
+        order by uuid asc
     </select>
 </mapper>

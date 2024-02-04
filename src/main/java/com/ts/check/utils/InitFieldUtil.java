@@ -18,13 +18,13 @@ public class InitFieldUtil {
         Class clazz = t.getClass();
         //初始化主键id
         try{
-            Field id = clazz.getDeclaredField("id");
-            if (ObjectUtil.isNotEmpty(id)){
-                id.setAccessible(true);
-                id.set(t, UUID.randomUUID().toString());
+            Field uuid = clazz.getDeclaredField("uuid");
+            if (ObjectUtil.isNotEmpty(uuid)){
+                uuid.setAccessible(true);
+                uuid.set(t, UUID.randomUUID().toString());
             }
         }catch (Exception e){
-            logger.info("初始化id属性失败，报错信息为{}", e.getMessage());
+            logger.info("初始化uuid属性失败，报错信息为{}", e.getMessage());
         }
 
         try{
