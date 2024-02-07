@@ -26,12 +26,15 @@ CREATE TABLE `check_record` (
     `device_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备id',
     `check_user_id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL COMMENT '巡检人员id',
     `check_time` datetime NOT NULL COMMENT '巡检时间',
-    `valid_check_items` text COMMENT '合格项id集合',
+    `valid_check_items` text COLLATE utf8mb4_general_ci COMMENT '合格项id集合',
+    `device_up_time` datetime DEFAULT NULL COMMENT '设备开机时间',
+    `device_down_time` datetime DEFAULT NULL COMMENT '设备停机时间',
+    `check_description` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '检查描述',
     `create_time` datetime NOT NULL COMMENT '创建时间',
     `update_time` datetime NOT NULL COMMENT '修改时间',
-    `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
+    `is_delete` char(1) NOT NULL COMMENT '删除标志',
     PRIMARY KEY (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of CHECK_RECORD
