@@ -155,14 +155,14 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `CHECK_ITEM`;
 CREATE TABLE `CHECK_ITEM` (
-  `uuiid` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `device_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备类型',
   `check_type` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '巡检类型',
   `content` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '检查内容',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `is_delete` char(1) COLLATE utf8mb4_general_ci NOT NULL COMMENT '删除标志',
-  PRIMARY KEY (`uuiid`)
+  PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
